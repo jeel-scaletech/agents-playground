@@ -28,6 +28,7 @@ import { ConnectionState, LocalParticipant, Track } from "livekit-client";
 import { QRCodeSVG } from "qrcode.react";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import tailwindTheme from "../../lib/tailwindTheme.preval";
+import { Button } from "../button/Button";
 
 export interface PlaygroundMeta {
   name: string;
@@ -200,6 +201,8 @@ export default function Playground({
     voiceAssistant.state,
   ]);
 
+  const [modality, setModality] = useState("text");
+
   const chatTileContent = useMemo(() => {
     if (voiceAssistant.audioTrack) {
       return (
@@ -220,6 +223,40 @@ export default function Playground({
             {config.description}
           </ConfigurationPanelItem>
         )}
+        <ConfigurationPanelItem title="Modality Switch">
+          {localParticipant && (
+            <div className="flex flex-col gap-2">
+              <Button
+                accentColor={config.settings.theme_color}
+                onClick={async () =>
+                  await localParticipant.performRpc({
+                    destinationIdentity: voiceAssistant.agent!!.identity,
+                    method: "pg.updateConfig",
+                    payload: JSON.stringify({
+                      "modalities": ["text"]
+                    }),
+                  })
+                }
+              >
+                {"Text Only"}
+              </Button>
+              <Button
+                accentColor={config.settings.theme_color}
+                onClick={async () =>
+                  await localParticipant.performRpc({
+                    destinationIdentity: voiceAssistant.agent!!.identity,
+                    method: "pg.updateConfig",
+                    payload: JSON.stringify({
+                      "modalities": ["text", "audio"]
+                    }),
+                  })
+                }
+              >
+                {"Text And Audio"}
+              </Button>
+            </div>
+          )}
+        </ConfigurationPanelItem>
 
         <ConfigurationPanelItem title="Settings">
           {localParticipant && (
