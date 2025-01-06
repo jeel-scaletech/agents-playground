@@ -233,7 +233,7 @@ export default function Playground({
                     destinationIdentity: voiceAssistant.agent!!.identity,
                     method: "pg.updateConfig",
                     payload: JSON.stringify({
-                      "modalities": ["text"]
+                      modalities: ["text"],
                     }),
                   })
                 }
@@ -247,7 +247,7 @@ export default function Playground({
                     destinationIdentity: voiceAssistant.agent!!.identity,
                     method: "pg.updateConfig",
                     payload: JSON.stringify({
-                      "modalities": ["text", "audio"]
+                      modalities: ["text", "audio"],
                     }),
                   })
                 }
@@ -309,6 +309,26 @@ export default function Playground({
             />
           </div>
         </ConfigurationPanelItem>
+        {localParticipant && (
+          <ConfigurationPanelItem title="End Call">
+            {localParticipant && (
+              <div className="flex flex-col gap-2">
+                <Button
+                  accentColor={"red"}
+                  onClick={async () =>
+                    await localParticipant.performRpc({
+                      destinationIdentity: voiceAssistant.agent!!.identity,
+                      method: "pg.endSession",
+                      payload: JSON.stringify({}),
+                    })
+                  }
+                >
+                  {"End Call"}
+                </Button>
+              </div>
+            )}
+          </ConfigurationPanelItem>
+        )}
         {localVideoTrack && (
           <ConfigurationPanelItem
             title="Camera"
